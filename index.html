@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>مترجم PDF الذكي | مبارك</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Cairo', sans-serif; }
+        .drag-active { border-color: #2563eb; background-color: #eff6ff; }
+    </style>
+</head>
+<body class="bg-slate-50 text-slate-800">
+
+    <div class="min-h-screen flex flex-col items-center justify-center p-6">
+        <div class="w-full max-w-2xl bg-white shadow-2xl rounded-3xl overflow-hidden border border-slate-100">
+            
+            <div class="bg-blue-600 p-10 text-center text-white">
+                <div class="inline-block p-3 bg-white/20 rounded-full mb-4">
+                    <svg class="w-10 h-10" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5h12M9 3v2m1.048 9.5A18.022 18.022 0 016.412 9m6.088 9h7M11 21l5-10 5 10M12.751 5C11.783 10.77 8.07 15.61 3 18.129" />
+                    </svg>
+                </div>
+                <h1 class="text-3xl font-bold uppercase tracking-wide">مترجم المستندات الذكي</h1>
+                <p class="mt-2 text-blue-100 opacity-90">ترجمة ملفات PDF فوراً عبر GPT-4</p>
+            </div>
+
+            <div class="p-8">
+                <div id="dropZone" class="relative border-4 border-dashed border-slate-200 rounded-2xl p-12 text-center transition-all cursor-pointer hover:border-blue-400 hover:bg-slate-50">
+                    <input type="file" id="fileInput" class="hidden" accept=".pdf">
+                    <div class="text-5xl mb-4 text-slate-300">📄</div>
+                    <p id="fileLabel" class="text-lg font-medium text-slate-600">اسحب ملف الـ PDF هنا أو اضغط للاختيار</p>
+                    <p class="text-sm text-slate-400 mt-2">الحد الأقصى للملف 10 ميجابايت</p>
+                </div>
+
+                <button id="actionBtn" class="w-full mt-8 bg-blue-600 text-white py-4 rounded-xl font-bold text-lg hover:bg-blue-700 transition-all shadow-lg transform active:scale-95 flex items-center justify-center gap-3">
+                    <span>ابدأ الترجمة الفورية</span>
+                    <div id="spinner" class="hidden w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
+                </button>
+
+                <div id="resultArea" class="hidden mt-8 animate-fade-in">
+                    <div class="flex items-center justify-between mb-2">
+                        <h3 class="font-bold text-blue-800">النص المترجم:</h3>
+                        <button onclick="copyText()" class="text-xs bg-slate-100 px-2 py-1 rounded hover:bg-slate-200">نسخ النص</button>
+                    </div>
+                    <div id="outputText" class="p-4 bg-slate-50 border border-slate-200 rounded-lg text-sm leading-relaxed text-slate-700 whitespace-pre-wrap">
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <footer class="mt-8 text-slate-400 text-sm">
+            تم التطوير بواسطة <span class="font-bold text-slate-500">مبارك</span> &copy; 2026
+        </footer>
+    </div>
+
+    <script>
+        const dropZone = document.getElementById('dropZone');
+        const fileInput = document.getElementById('fileInput');
+        const fileLabel = document.getElementById('fileLabel');
+        const actionBtn = document.getElementById('actionBtn');
+        const spinner = document.getElementById('spinner');
+        const resultArea = document.getElementById('resultArea');
+        const outputText = document.getElementById('outputText');
+
+        // التفاعل مع السحب والإفلات
+        dropZone.onclick = () => fileInput.click();
+        
+        fileInput.onchange = (e) => {
+            if(e.target.files.length > 0) {
+                fileLabel.innerHTML = `تم اختيار: <span class="text-blue-600 font-bold">${e.target.files[0].name}</span>`;
+                dropZone.classList.add('border-blue-400', 'bg-blue-50');
+            }
+        };
+
+        // محاكاة معالجة الملف
+        actionBtn.onclick = async () => {
+            if(!fileInput.files[0]) return alert("فضلاً اختر ملفاً أولاً!");
+
+            // تفعيل حالة التحميل
+            actionBtn.disabled = true;
+            spinner.classList.remove('hidden');
+            actionBtn.querySelector('span').innerText = "جاري المعالجة بذكاء...";
+
+            // محاكاة استجابة السيرفر (يمكنك ربط الـ API هنا)
+            setTimeout(() => {
+                actionBtn.disabled = false;
+                spinner.classList.add('hidden');
+                actionBtn.querySelector('span').innerText = "تمت الترجمة!";
+                
+                resultArea.classList.remove('hidden');
+                outputText.innerText = "مرحباً مبارك! تم استلام ملفك ومعالجته. في النسخة البرمجية الكاملة، هنا يتم عرض النص المترجم القادم من OpenAI API بعد قراءة محتوى الـ PDF.";
+            }, 2500);
+        };
+
+        function copyText() {
+            navigator.clipboard.writeText(outputText.innerText);
+            alert("تم نسخ النص!");
+        }
+    </script>
+</body>
+</html>
